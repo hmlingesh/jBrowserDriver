@@ -106,6 +106,15 @@ public class RequestHeaders implements Serializable {
 
   /**
    * Specify the ordered headers to be sent on each request.
+   * 
+   * @see RequestHeaders#DROP_HEADER
+   * @see RequestHeaders#DYNAMIC_HEADER
+   */
+  public RequestHeaders(LinkedHashMap<String, String> headers, String referer) {
+    this(headers, headers, referer);
+  }
+  /**
+   * Specify the ordered headers to be sent on each request.
    * Allows different sets of headers for HTTP and HTTPS.
    * 
    * @see RequestHeaders#DROP_HEADER
@@ -122,6 +131,30 @@ public class RequestHeaders implements Serializable {
     this.headersHttpCasing = headersHttpCasingTmp;
     this.headersHttps = headersHttpsTmp;
     this.headersHttpsCasing = headersHttpsCasingTmp;
+  }
+
+  /**
+   * Specify the ordered headers to be sent on each request.
+   * Allows different sets of headers for HTTP and HTTPS.
+   * 
+   * @see RequestHeaders#DROP_HEADER
+   * @see RequestHeaders#DYNAMIC_HEADER
+   */
+  public RequestHeaders(LinkedHashMap<String, String> headersHttp, LinkedHashMap<String, String> headersHttps, String referer) {
+    LinkedHashMap<String, String> headersHttpTmp = new LinkedHashMap<String, String>();
+    Map<String, String> headersHttpCasingTmp = new HashMap<String, String>();
+    LinkedHashMap<String, String> headersHttpsTmp = new LinkedHashMap<String, String>();
+    Map<String, String> headersHttpsCasingTmp = new HashMap<String, String>();
+    createHeaders(headersHttp, headersHttpTmp, headersHttpCasingTmp);
+    createHeaders(headersHttps, headersHttpsTmp, headersHttpsCasingTmp);
+    this.headersHttp = headersHttpTmp;
+    this.headersHttpCasing = headersHttpCasingTmp;
+    this.headersHttps = headersHttpsTmp;
+    this.headersHttpsCasing = headersHttpsCasingTmp;
+    this.headersHttp.put("Referer", referer);
+    this.headersHttpCasing.put("Referer", referer);
+    this.headersHttps.put("Referer", referer);
+    this.headersHttpsCasing.put("Referer", referer);
   }
 
   private static void createHeaders(
